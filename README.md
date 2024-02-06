@@ -2,6 +2,8 @@
 
 ## Running the project
 
+- Copy `example.env` in the same directory and rename the copied file to `.env` 
+
 ### Requirements
 
 - You need to have Docker Desktop installed, up and running.
