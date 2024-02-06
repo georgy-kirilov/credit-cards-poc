@@ -1,17 +1,42 @@
+using CreditCards;
 using CreditCards.Contracts;
 using CreditCards.Data;
 using CreditCards.Features;
 using EpsAdapter;
+using EpsAdapter.Data;
+using EpsAdapter.Data.Models;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Runner;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddMassTransit(bus =>
+{
+    bus.AddConsumer<RequestCardStatusChangeToEpsConsumer>();
+    bus.AddConsumer<CardStatusChangedConsumer>();
+    bus.SetKebabCaseEndpointNameFormatter();
+    bus.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("rabbitmq", "/", host =>
+        {
+            host.Username(builder.Configuration["RABBITMQ_USER"]);
+            host.Password(builder.Configuration["RABBITMQ_PASSWORD"]);
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 builder.Services.AddScoped<RequestCardStatusChangeHandler>();
+builder.Services.AddDatabase<CreditCardsDbContext>(builder.Configuration["CREDIT_CARDS_DATABASE"], CreditCardsDbContext.Schema);
 builder.Services.AddKeyedTransient<ICardOperationPublisher, EpsCardOperationPublisher>(CardIssuer.Eps);
-builder.Services.AddDbContext<CreditCardsDbContext>(options => options.UseSqlServer(builder.Configuration["Database"]));
+
+builder.Services.AddDatabase<EpsAdapterDbContext>(builder.Configuration["EPS_ADAPTER_DATABASE"], EpsAdapterDbContext.Schema);
+builder.Services.AddHostedService<EpsWorker>();
 
 var app = builder.Build();
 
@@ -20,21 +45,27 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    using var scope = app.Services.CreateScope();
-    using var dbContext = scope.ServiceProvider.GetRequiredService<CreditCardsDbContext>();
+    using var scope = app.Services.CreateAsyncScope();
 
-    dbContext.Database.EnsureDeleted();
-    dbContext.Database.EnsureCreated();
+    using var creditCardsDbContext = scope.ServiceProvider.GetRequiredService<CreditCardsDbContext>();
+    creditCardsDbContext.Database.Migrate();
 
-    var card = Card.Create(CardIssuer.Eps);
-    dbContext.Cards.Add(card);
-    dbContext.SaveChanges();
+    if (!creditCardsDbContext.Cards.Any())
+    {
+        var card = Card.Create(CardIssuer.Eps);
+        creditCardsDbContext.Cards.Add(card);
+        creditCardsDbContext.SaveChanges();
+
+        using var epsDbContext = scope.ServiceProvider.GetRequiredService<EpsAdapterDbContext>();
+        epsDbContext.Database.Migrate();
+        var epsCard = EpsCard.Create(Guid.NewGuid(), card.Id);
+        epsDbContext.Cards.Add(epsCard);
+        epsDbContext.SaveChanges();
+    }
 }
 
 app.UseHttpsRedirection();
 
 app.MapPost("api/request-card-status-change", RequestCardStatusChangeEndpoint.Map);
-
-//app.MapPost("api/eps/card-status-changed")
 
 app.Run();

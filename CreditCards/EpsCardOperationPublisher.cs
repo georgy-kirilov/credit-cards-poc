@@ -1,6 +1,8 @@
 ﻿using CreditCards.Contracts;
+using EpsAdapter.Contracts;
+using MassTransit;
 
-namespace EpsAdapter.Contracts;
+namespace CreditCards;
 
 public sealed class EpsCardOperationPublisher(IPublishEndpoint _endpoint) : ICardOperationPublisher
 {

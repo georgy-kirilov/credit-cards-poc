@@ -1,4 +1,4 @@
-﻿namespace CreditCards.Contracts;
+﻿namespace CreditCards.Data;
 
 public enum CardIssuer
 {

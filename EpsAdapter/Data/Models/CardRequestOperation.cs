@@ -1,4 +1,4 @@
-﻿namespace EpsAdapter;
+﻿namespace EpsAdapter.Data.Models;
 
 public enum CardRequestOperation
 {

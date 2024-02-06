@@ -43,6 +43,18 @@ public sealed class Card
         return true;
     }
 
+    public void ChangeStatus(CardStatus newStatus)
+    {
+        // More domain logic and validation
+
+        if (RequestedStatus == newStatus)
+        {
+            RequestedStatus = null;
+        }
+
+        Status = newStatus;
+    }
+
     public static Card Create(CardIssuer cardIssuer) => new()
     {
         Issuer = cardIssuer

@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Text.Json;
 
-namespace EpsAdapter;
+namespace EpsAdapter.Data.Models;
 
 public abstract record CardRequestParameters(
     [property: JsonIgnore] CardRequestOperation CardRequestOperation)
