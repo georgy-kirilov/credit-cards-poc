@@ -26,11 +26,6 @@ public sealed class Card
             return false;
         }
 
-        if (Status == CardStatus.Requested)
-        {
-            return false;
-        }
-
         if (Status == CardStatus.Destroyed)
         {
             return false;

@@ -57,6 +57,7 @@ public sealed class EpsWorker(
     private async Task<bool> CallExternalEpsApiToChangeCardStatus(ChangeCardStatusCardRequestParameters parameters)
     {
         // Simulate a call to the external EPS API
+        await Console.Out.WriteLineAsync("Calling EPS API...");
         await Task.Delay(300);
         return true;
     }

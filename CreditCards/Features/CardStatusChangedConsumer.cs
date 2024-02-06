@@ -19,5 +19,7 @@ public sealed class CardStatusChangedConsumer(CreditCardsDbContext _dbContext) :
         card.ChangeStatus(context.Message.Status);
 
         await _dbContext.SaveChangesAsync();
+
+        await Console.Out.WriteLineAsync("Card status changed!");
     }
 }
