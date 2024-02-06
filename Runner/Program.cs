@@ -13,12 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddLogging();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddMassTransit(bus =>
 {
+    bus.SetKebabCaseEndpointNameFormatter();
+
     bus.AddConsumer<RequestCardStatusChangeToEpsConsumer>();
     bus.AddConsumer<CardStatusChangedConsumer>();
-    bus.SetKebabCaseEndpointNameFormatter();
+
     bus.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("rabbitmq", "/", host =>
@@ -63,8 +66,6 @@ if (app.Environment.IsDevelopment())
         epsDbContext.SaveChanges();
     }
 }
-
-app.UseHttpsRedirection();
 
 app.MapPost("api/request-card-status-change", RequestCardStatusChangeEndpoint.Map);
 

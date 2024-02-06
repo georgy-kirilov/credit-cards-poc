@@ -2,12 +2,14 @@
 using EpsAdapter.Data;
 using EpsAdapter.Data.Models;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace EpsAdapter;
 
 public sealed class RequestCardStatusChangeToEpsConsumer(
     EpsAdapterDbContext _dbContext,
-    TimeProvider _timeProvider) : IConsumer<RequestCardStatusChangeToEps>
+    TimeProvider _timeProvider,
+    ILogger<RequestCardStatusChangeToEpsConsumer> _logger) : IConsumer<RequestCardStatusChangeToEps>
 {
     public async Task Consume(ConsumeContext<RequestCardStatusChangeToEps> context)
     {
@@ -27,5 +29,7 @@ public sealed class RequestCardStatusChangeToEpsConsumer(
 
         await _dbContext.CardRequests.AddAsync(cardRequest);
         await _dbContext.SaveChangesAsync();
+
+        _logger.LogInformation("2. EPS card request for status change of card with ID '{CardId}' has been created.", context.Message.CardId);
     }
 }

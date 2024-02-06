@@ -5,12 +5,14 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace EpsAdapter;
 
 public sealed class EpsWorker(
-    IServiceProvider _serviceProvider,
-    IBus _bus) : BackgroundService
+    IBus _bus,
+    ILogger<EpsWorker> _logger,
+    IServiceProvider _serviceProvider) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -29,6 +31,12 @@ public sealed class EpsWorker(
                     .Take(30)
                     .ToListAsync(stoppingToken);
 
+                if (cardRequests.Count == 0)
+                {
+                    _logger.LogInformation("No pending EPS card requests were found.");
+                    continue;
+                }
+
                 foreach (var cardRequest in cardRequests)
                 {
                     if (cardRequest.Operation == CardRequestOperation.ChangeCardStatus)
@@ -36,8 +44,12 @@ public sealed class EpsWorker(
                         await ChangeCardStatus(cardRequest, dbContext);
                     }
                 }
+
+                _logger.LogInformation("A total of {ProcessedRequests} EPS card request(s) have been processed.", cardRequests.Count);
             }
-            catch { }
+            catch
+            {
+            }
         }
     }
 
@@ -45,20 +57,28 @@ public sealed class EpsWorker(
     {
         var parameters = cardRequest.GetParameters<ChangeCardStatusCardRequestParameters>();
 
-        await CallExternalEpsApiToChangeCardStatus(parameters);
+        await CallExternalEpsApiToChangeCardStatus(cardRequest.SmartCheckCardId, parameters);
 
         cardRequest.Complete();
 
-        await _bus.Publish(new CardStatusChanged(cardRequest.SmartCheckCardId, parameters.NewStatus));
-
         await dbContext.SaveChangesAsync();
+
+        _logger.LogInformation("4. EPS card request has been marked as complete.");
+
+        // TODO: If we decide to use an outbox table, we would need to publish the message before calling SaveChangesAsync.
+
+        await _bus.Publish(new CardStatusChanged(cardRequest.SmartCheckCardId, parameters.NewStatus));
     }
 
-    private async Task<bool> CallExternalEpsApiToChangeCardStatus(ChangeCardStatusCardRequestParameters parameters)
+    private async Task<bool> CallExternalEpsApiToChangeCardStatus(int cardId, ChangeCardStatusCardRequestParameters parameters)
     {
         // Simulate a call to the external EPS API
-        await Console.Out.WriteLineAsync("Calling EPS API...");
+        _logger.LogInformation("3. Calling the external EPS API to change status for card with ID '{CardId}' to '{NewStatus}'.",
+            cardId,
+            parameters.NewStatus);
+
         await Task.Delay(300);
+
         return true;
     }
 }
