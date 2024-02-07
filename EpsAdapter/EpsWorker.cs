@@ -12,7 +12,10 @@ namespace EpsAdapter;
 public sealed class EpsWorker(
     IBus _bus,
     ILogger<EpsWorker> _logger,
-    IServiceProvider _serviceProvider) : BackgroundService
+    IServiceProvider _serviceProvider,
+    EPSClient API)
+    : BackgroundService
+    
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -37,6 +40,12 @@ public sealed class EpsWorker(
                     continue;
                 }
 
+                //get all channge statues card request
+                //EPSClient.ChangeStatueEndpont(cardRequests);
+                //if (ok)
+                //{
+                //    badreques();
+                //}
                 foreach (var cardRequest in cardRequests)
                 {
                     if (cardRequest.Operation == CardRequestOperation.ChangeCardStatus)
@@ -49,6 +58,7 @@ public sealed class EpsWorker(
             }
             catch
             {
+                new EPSClient();
             }
         }
     }

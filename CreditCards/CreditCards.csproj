@@ -20,6 +20,11 @@
   <ItemGroup>
     <ProjectReference Include="..\CreditCards.Contracts\CreditCards.Contracts.csproj" />
     <ProjectReference Include="..\EpsAdapter.Contracts\EpsAdapter.Contracts.csproj" />
+    <ProjectReference Include="..\src\SharedKernel\SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 	
 </Project>
