@@ -1,6 +1,0 @@
-@Runner_HostAddress = http://localhost:5208
-
-GET {{Runner_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

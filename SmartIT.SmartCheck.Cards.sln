@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartIT.SmartCheck.Cards", "SmartIT.SmartCheck.Cards\SmartIT.SmartCheck.Cards.csproj", "{B3530DDA-8BAE-4F33-BB57-93FCEEB1D7DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartIT.SmartCheck.Cards.Contracts", "SmartIT.SmartCheck.Cards.Contracts\SmartIT.SmartCheck.Cards.Contracts.csproj", "{55B5D913-831E-4954-9888-916B00143F6E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartIT.SmartCheck.Cards.Eps", "SmartIT.SmartCheck.Cards.Eps\SmartIT.SmartCheck.Cards.Eps.csproj", "{F487CF00-A0D9-4AEB-B1FF-C0051D25878D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartIT.SmartCheck.Cards.Runner", "SmartIT.SmartCheck.Cards.Runner\SmartIT.SmartCheck.Cards.Runner.csproj", "{7A7D6C15-A4A2-4A05-A21E-07ED7FA40686}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6535E484-8C8F-4115-A5AA-9A284E58A785}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		docker-compose.dev.yml = docker-compose.dev.yml
+		Dockerfile.dev = Dockerfile.dev
+		nuget_k8s.config = nuget_k8s.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3530DDA-8BAE-4F33-BB57-93FCEEB1D7DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3530DDA-8BAE-4F33-BB57-93FCEEB1D7DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3530DDA-8BAE-4F33-BB57-93FCEEB1D7DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3530DDA-8BAE-4F33-BB57-93FCEEB1D7DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55B5D913-831E-4954-9888-916B00143F6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B5D913-831E-4954-9888-916B00143F6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B5D913-831E-4954-9888-916B00143F6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B5D913-831E-4954-9888-916B00143F6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F487CF00-A0D9-4AEB-B1FF-C0051D25878D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F487CF00-A0D9-4AEB-B1FF-C0051D25878D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F487CF00-A0D9-4AEB-B1FF-C0051D25878D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F487CF00-A0D9-4AEB-B1FF-C0051D25878D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A7D6C15-A4A2-4A05-A21E-07ED7FA40686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A7D6C15-A4A2-4A05-A21E-07ED7FA40686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A7D6C15-A4A2-4A05-A21E-07ED7FA40686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A7D6C15-A4A2-4A05-A21E-07ED7FA40686}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5D7B3B8-2B2F-474D-9112-68A6AFEFD3E6}
+	EndGlobalSection
+EndGlobal

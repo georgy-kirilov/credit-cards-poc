@@ -1,0 +1,27 @@
+services:
+  cards-module-be-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: on-failure
+    ports:
+      - "49575:80"
+    environment:
+      - WAIT_FOR_DEBUGGER=false
+    volumes:
+      # Cards
+      - ./SmartIT.SmartCheck.Cards:/src/SmartIT.SmartCheck.Cards:delegated
+      - /src/SmartIT.SmartCheck.Cards/obj
+      - /src/SmartIT.SmartCheck.Cards/bin
+      # Contracts
+      - ./SmartIT.SmartCheck.Cards.Contracts:/src/SmartIT.SmartCheck.Cards.Contracts:delegated
+      - /src/SmartIT.SmartCheck.Cards.Contracts/obj
+      - /src/SmartIT.SmartCheck.Cards.Contracts/bin
+      # Eps
+      - ./SmartIT.SmartCheck.Cards.Eps:/src/SmartIT.SmartCheck.Cards.Eps:delegated
+      - /src/SmartIT.SmartCheck.Cards.Eps/obj
+      - /src/SmartIT.SmartCheck.Cards.Eps/bin
+      # Runner
+      - ./SmartIT.SmartCheck.Cards.Runner:/src/SmartIT.SmartCheck.Cards.Runner:delegated
+      - /src/SmartIT.SmartCheck.Cards.Runner/obj
+      - /src/SmartIT.SmartCheck.Cards.Runner/bin

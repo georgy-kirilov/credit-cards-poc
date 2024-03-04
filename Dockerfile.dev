@@ -1,0 +1,35 @@
+# Use dotnet sdk for restore steps
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS restore
+
+ARG NUGET_PASS
+
+# Create root working directory
+WORKDIR /src
+
+# Copy all source files
+COPY ./SmartIT.SmartCheck.Cards/ ./SmartIT.SmartCheck.Cards/
+COPY ./SmartIT.SmartCheck.Cards.Contracts/ ./SmartIT.SmartCheck.Cards.Contracts/
+COPY ./SmartIT.SmartCheck.Cards.Eps/ ./SmartIT.SmartCheck.Cards.Eps/
+COPY ./SmartIT.SmartCheck.Cards.Runner/ ./SmartIT.SmartCheck.Cards.Runner/
+COPY ./nuget.config ./nuget.config
+
+# Restore dependencies
+RUN dotnet restore ./SmartIT.SmartCheck.Cards.Runner/SmartIT.SmartCheck.Cards.Runner.csproj
+
+# Use the same image for development
+FROM restore AS development
+
+# Set environment variables
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_HTTP_PORTS=80
+ENV DOTNET_USE_POLLING_FILE_WATCHER=1
+
+# Set working directory
+WORKDIR /src/SmartIT.SmartCheck.Cards.Runner
+
+# Install dotnet EF tool and add it to PATH
+RUN dotnet tool install --global dotnet-ef --version 8.0.2
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
+# Watch for changes and restart app
+ENTRYPOINT ["dotnet", "watch", "run", "--no-restore", "--no-hot-reload"]
