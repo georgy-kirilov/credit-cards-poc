@@ -1,8 +1,6 @@
 # Use dotnet sdk for restore steps
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS restore
 
-ARG NUGET_PASS
-
 # Create root working directory
 WORKDIR /src
 
