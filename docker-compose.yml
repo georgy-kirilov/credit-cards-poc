@@ -1,5 +1,6 @@
 services:
-  cards-module-be-api:
+  cards-module-be:
+    container_name: cards-module-be
     build:
       context: .
       dockerfile: Dockerfile.dev
